@@ -4,5 +4,4 @@
 - call lyft?
 - messenger (python relay)
 - sending pictures
-- tts twilio calls
-                                                              ~                      
+- tts tobo twilio call
