@@ -26,7 +26,7 @@ class EchoBot(Client):
 			"name": client.fetchUserInfo(author_id)[author_id].first_name
 		}
 
-		requests.post('http://localhost:3000/thread', json={ 'thread': thread_id })
+		requests.post('http://192.168.137.229:3000/thread', json={ 'thread': thread_id })
 
 		m = None
 		if(os.stat("messages.json").st_size == 0): m = []
