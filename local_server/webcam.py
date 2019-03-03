@@ -27,7 +27,7 @@ while 1:
 		print "yeet2"
 		cv2.imwrite('image.png', frame)
 		f = requests.get('http://localhost:3000/thread')
-		client.sendLocalFiles('image.png', thread_id=f['thread'], thread_type=ThreadType['USER'])
+		client.sendLocalFiles('image.png', thread_id=f.json()['thread'], thread_type=ThreadType['USER'])
 	
 	if cv2.waitKey(1) == 27: 
 		break  # esc to quit

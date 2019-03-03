@@ -6,6 +6,7 @@ from secrets import *
 import os
 import json
 import emoji
+import requests
 
 tID = None 
 tThread = None
@@ -24,6 +25,8 @@ class EchoBot(Client):
 			"type": thread_type.name,
 			"name": client.fetchUserInfo(author_id)[author_id].first_name
 		}
+
+		requests.post('http://localhost:3000/thread', json={ 'thread': thread_id })
 
 		m = None
 		if(os.stat("messages.json").st_size == 0): m = []
