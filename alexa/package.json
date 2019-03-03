@@ -1,0 +1,22 @@
+{
+  "name": "sfhacks2019",
+  "version": "1.0.0",
+  "description": "- integrals through alexa and camera - call lyft? - messenger (python relay) - sending pictures - tts robo twilio call",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronkh/sfhacks2019.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aaronkh/sfhacks2019/issues"
+  },
+  "homepage": "https://github.com/aaronkh/sfhacks2019#readme",
+  "dependencies": {
+    "ask-sdk": "^2.4.0"
+  }
+}
