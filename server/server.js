@@ -62,15 +62,9 @@ function sendWolfram(res, raw) {
                     console.log(d.queryresult.pods[i].subpods[0].plaintext)
                     let ans = d.queryresult.pods[i].subpods[0].plaintext
                     ans = ans.split('...')[0]
-                    if(ans.split('=').length > 1){
-                        res.send(ans.split('≈')[0])
-                    } else {
-                        if (ans.split('≈').length > 1)
-                            ans = "about "+(ans.split('≈')[1])
-                        else
-                            ans = ans.split('=')[1]
-                        res.send(ans)
-                    }
+                    ans = ans.split('≈')[0]
+                    ans = ans.split('=')[1]
+                    res.send(ans)
                 }
             }
         }
