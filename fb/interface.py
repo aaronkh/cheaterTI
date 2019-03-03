@@ -29,7 +29,7 @@ while True:
 					ans = res['resp']
 					break
 
-			ser.write(('Answer: ' + res + '\n').encode())
+			ser.write(('Answer: ' + ans + '\n').encode())
 			
 		elif(line.startswith(':C')):
 			# take picture and send to fb messenger
