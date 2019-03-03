@@ -1,4 +1,7 @@
 const Alexa = require('ask-sdk-core');
+const request = require('sync-request');
+
+var url = 'https://math-alexa.appspot.com/latex';
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -20,15 +23,15 @@ const MathIntentHandler = {
     },
     handle(handlerInput) {
         var req = handlerInput.requestEnvelope.request;
-        console.log(req);
-        var lower = req.intent.slots.lowerbound.value;
-        var upper = req.intent.slots.upperbound.value;
-        console.log(lower);
-        console.log(upper);
-        const speechText = '\\int_' + lower + '^' + upper;
+        var problem = req.intent.slots.Problem.value;
+
+        var res = request('POST', url, {
+          json: {latex : problem},
+        });
+        var user = res.getBody('utf8');
         return handlerInput.responseBuilder
-            .speak(speechText)
-            .getResponse();
+        .speak(user)
+        .getResponse();
     }
 };
 
