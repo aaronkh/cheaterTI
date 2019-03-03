@@ -12,5 +12,5 @@ CheaterTI uses advanced programming techniques to make possible.
 - [x] integrals through camera
 - [ ] call lyft?
 - [x] messenger (python relay)
-- [ ] sending pictures
+- [x] sending pictures
 - [ ] tts robo twilio call

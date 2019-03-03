@@ -10,41 +10,32 @@ import cv2
 import requests
 import base64
 
-lat, lng = 37.72671448802936, -122.48222808889392
-lyft_state = 'NO_RIDE'
-
-ser = serial.Serial('/dev/cu.usbmodem141301', 9600, timeout=1)
+ser = serial.Serial('/dev/tty96B0', 9600, timeout=1)
 sleep(1)
-
-video = cv2.VideoCapture(0)
 
 client = Client(email, pw)
 
 count = 0
 
 while True:
-	ret,frame = video.read()
 	line = ser.readline()
 	if line.startswith(':'):
 		if(line.startswith(':I')):
-			# take picture and get integral
-			cv2.imwrite('image.png', frame)
-			r = requests.post('https://math-alexa.appspot.com/image', json={ 'image': "data:image/jpg;base64," + base64.b64encode(open('image.png', "rb").read()).decode() })
-			ser.write(('Answer: ' + r.text + '\n').encode())
+			r = requests.get('http://192.168.137.229:3000/cam')
+			ans = None
+			while True:
+				f = requests.get('http://192.168.137.229:3000/resp')
+				res = f.json()
+				if(len(res['resp'])): 
+					ans = res['resp']
+					break
+
+			ser.write(('Answer: ' + ans + '\n').encode())
 			
 		elif(line.startswith(':C')):
 			# take picture and send to fb messenger
-			cv2.imwrite('image.png', frame)
-			try:
-				m = None
-				with open("messages.json", 'r') as f:
-					m = json.loads(f.read())
-				m = m[len(m)-1]
-				client.sendLocalFiles('image.png', thread_id=int(m['id']), thread_type=ThreadType[m['type']])
-			except Exception as e:
-				pass
-		elif line.startswith(':L '):
-			line_lower = line.lower()
+			r = requests.get('http://192.168.137.229:3000/camf')
+			ser.write(('Image sent').encode())
 			
 		elif(line.startswith(':W')):
 			pass
