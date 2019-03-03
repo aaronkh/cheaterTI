@@ -60,7 +60,9 @@ function sendWolfram(res, raw) {
                     res.send(d.queryresult.pods[i].subpods[0].plaintext)
                 } else if (d.queryresult.pods[i].title == "Definite integral") {
                     console.log(d.queryresult.pods[i].subpods[0].plaintext)
-                    res.send(d.queryresult.pods[i].subpods[0].plaintext.split('=') [1])
+                    let ans = d.queryresult.pods[i].subpods[0].plaintext
+                    ans = ans.split('=')[1]
+                    res.send(ans.split('≈')[0])
                 }
             }
         }
