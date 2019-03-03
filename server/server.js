@@ -50,7 +50,7 @@ function sendMathPix(img, cb) {
 
 function sendWolfram(res, raw) {
     // // parse wolfram results
-    latex = raw ? latex : latex.split(' ').join('')
+    latex = raw ? latex : latex.split(' {').join('{')
     let encoded_latex = encodeURIComponent(latex) // strips whitespace from latex
     let call = `https://api.wolframalpha.com/v2/query?input=${encoded_latex}&format=plaintext&output=JSON&appid=${WOLFRAM_ID}`
     fetch(call).then(e=>
