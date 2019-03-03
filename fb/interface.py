@@ -91,7 +91,10 @@ while True:
 				lyft_status = 'ordered'
 				lyft_ride_id = json.loads(r)["ride_id"]
 				ser.write(('Please wait for Lyft to '+line_lower).encode())
-
+		elif line.startswith(':T '):
+			requests.post('https://math-alexa.appspot.com/twilio', json = {
+				"message": line.lower()[3:]
+			})
 		elif(line.startswith(':W')):
 			pass
 			# send to wolframalpha

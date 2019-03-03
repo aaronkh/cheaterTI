@@ -21,6 +21,10 @@ app.use(express.json({limit: '15mb'}))
 const MATHPIX_ID = process.env.MATHPIX_ID
 const MATHPIX_KEY = process.env.MATHPIX_KEY
 const WOLFRAM_ID = process.env.WOLFRAM_ID
+const TWILIO_ID = process.env.TWILIO_ID
+const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN
+
+const twilio_client = require('twilio')(TWILIO_ID, TWILIO_AUTH_TOKEN);
 
 let latex = undefined
 let results = ""
@@ -114,6 +118,21 @@ app.get('/results', (req, res) => {
     if (temp > 0)
         res.json({ results: temp })
     res.status(404).send({ message: "No results found" })
+})
+
+let twilio_message = ""
+app.get('/twilio', (req, res) => {
+    res.send(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${twilio_message}</Say></Response>`)
+})
+
+app.post('/twilio', (req, res) => {
+    twilio_message = res.body.message
+    twilio_client.calls.create({
+        url: 'http://math-alexa.appspot.com/twilio',
+        to: '+14157697259',
+        from: '+17179067864',
+    })
+    res.status(200).send()
 })
 
 app.listen(process.env.PORT || 3000, (req, res) => {
