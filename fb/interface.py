@@ -2,12 +2,16 @@ from fbchat import log, Client
 from fbchat.models import *
 from time import sleep
 from secrets import *
+import lyft_secrets
 
 import serial
 import json
 import cv2
 import requests
 import base64
+
+lat, lng = 37.72671448802936, -122.48222808889392
+lyft_state = 'NO_RIDE'
 
 ser = serial.Serial('/dev/cu.usbmodem141301', 9600, timeout=1)
 sleep(1)
@@ -39,6 +43,8 @@ while True:
 				client.sendLocalFiles('image.png', thread_id=int(m['id']), thread_type=ThreadType[m['type']])
 			except Exception as e:
 				pass
+		elif line.startswith(':L '):
+			line_lower = line.lower()
 			
 		elif(line.startswith(':W')):
 			pass
