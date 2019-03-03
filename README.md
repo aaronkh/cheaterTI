@@ -10,7 +10,7 @@ CheaterTI uses advanced programming techniques to make possible.
 
 - [x] integrals through alexa 
 - [x] integrals through camera
-- [ ] call lyft?
+- [x] call lyft?
 - [x] messenger (python relay)
-- [x] sending pictures
-- [ ] tts robo twilio call
+- [x] ~~sending pictures~~
+- [x] tts robo twilio call
