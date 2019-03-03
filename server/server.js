@@ -44,24 +44,32 @@ function sendMathPix(img, cb) {
     }).catch((err) => { throw err })
 }
 
-function sendWolfram() {
-    // parse wolfram results
+function sendWolfram(res) {
+    // // parse wolfram results
     let encoded_latex = encodeURIComponent(latex)
-    let call = `https://api.wolframalpha.com/v2/query?input=${encoded_latex}&format=image,plaintext&output=JSON&appid=${WOLFRAM_ID}`
+    let call = `https://api.wolframalpha.com/v2/query?input=${encoded_latex}&format=plaintext&output=JSON&appid=${WOLFRAM_ID}`
     fetch(call).then(e=>
         e.json()
     ).then(d=>{
-        if (d.queryresult.success && d.queryresult.numpods > 0)
-            results = d.queryresult.pods[0].subpods[0].plaintext
+        if (d.queryresult.success && d.queryresult.numpods > 0) 
+            for (let i = 0; i < d.queryresult.pods.length; i++) 
+                if (d.queryresult.pods[i].title ==  "Result")
+                    res.send(d.queryresult.pods[i].subpods[0].plaintext)
+        res.send("")
+    }).catch (e=>{
+        console.log(e)
+        res.send(e)
     })
 }
 
+app.get('/test', (req, res) => {
+    res.status(200).send()
+})
 // get image
 app.post('/image', (req, res) => {
     // console.log(req.body.image)
     try {
-        sendMathPix(req.body.image, () => sendWolfram()) // promises are overrated
-        res.json({ success: "image received" })
+        sendMathPix(req.body.image, () => sendWolfram(res)) // promises are overrated
     } catch(err) {
         console.log(err)
         res.status(500).send({ message: "error processing image" })
@@ -77,7 +85,7 @@ app.get('/latex', (req, res) => {
 })
 app.post('/latex', (req, res) => {
     latex = req.body.latex
-    res.json({ success: true })
+    sendWolfram(res)
 })
 
 // get wolfram results
