@@ -35,7 +35,7 @@ place = requests.get("https://maps.googleapis.com/maps/api/place/findplacefromte
 })
 loc = json.loads(place.text)['candidates'][0]['geometry']['location']
 
-print requests.post('https://api.lyft.com/v1/rides', 
+r = requests.post('https://api.lyft.com/v1/rides', 
 headers = {
     "Authorization" : "Bearer "+access_token
 },
@@ -44,5 +44,12 @@ json={
     "origin": current,
     "destination": loc
 }).text
+
+ride_id = json.loads(r)["ride_id"]
+
+requests.post('https://api.lyft.com/v1/rides/'+ride_id+'/cancel', headers={
+    "Content-Type": "application/json",
+    "Authorization": "Bearer "+access_token
+})
 
 
