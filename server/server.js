@@ -121,17 +121,17 @@ app.get('/results', (req, res) => {
 })
 
 let twilio_message = ""
-app.get('/twilio', (req, res) => {
+app.post('/twiliog', (req, res) => {
     res.send(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${twilio_message}</Say></Response>`)
 })
-
 app.post('/twilio', (req, res) => {
-    twilio_message = res.body.message
+    twilio_message = req.body.message
     twilio_client.calls.create({
-        url: 'http://math-alexa.appspot.com/twilio',
+        url: 'http://math-alexa.appspot.com/twiliog',
         to: '+14157697259',
-        from: '+17179067864',
+        from: '+14692995709',
     })
+    console.log(twilio_message)
     res.status(200).send()
 })
 
