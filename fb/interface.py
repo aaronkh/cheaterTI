@@ -20,6 +20,8 @@ lyft_ride_id = ""
 access_token = ""
 current = {"lat": 37.72671448802936, "lng":-122.48222808889392}
 
+url = "http://192.168.137.109"
+
 def post_with_auth(*args, **kwargs):
     return requests.post(*args, auth=(lyft_secrets.id, lyft_secrets.secret), **kwargs)
 
@@ -44,10 +46,10 @@ while True:
 	line = ser.readline()
 	if line.startswith(':'):
 		if(line.startswith(':I')):
-			r = requests.get('http://192.168.137.229:3000/cam')
+			r = requests.get(url+':3000/cam')
 			ans = None
 			while True:
-				f = requests.get('http://192.168.137.229:3000/resp')
+				f = requests.get(url+':3000/resp')
 				res = f.json()
 				if(len(res['resp'])): 
 					ans = res['resp']
@@ -57,7 +59,7 @@ while True:
 			
 		elif(line.startswith(':C')):
 			# take picture and send to fb messenger
-			r = requests.get('http://192.168.137.229:3000/camf')
+			r = requests.get(url+':3000/camf')
 			ser.write(('Image sent').encode())
 		elif line.startswith(':L '):
 			line_lower = line.lower()
