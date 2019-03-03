@@ -21,7 +21,15 @@ while True:
 	if line.startswith(':'):
 		if(line.startswith(':I')):
 			r = requests.get('http://192.168.137.229:3000/cam')
-			ser.write(('Answer: ' + r.text + '\n').encode())
+			ans = None
+			while True:
+				f = requests.get('http://192.168.137.229:3000/resp')
+				res = f.json()
+				if(len(res['resp'])): 
+					ans = res['resp']
+					break
+
+			ser.write(('Answer: ' + res + '\n').encode())
 			
 		elif(line.startswith(':C')):
 			# take picture and send to fb messenger

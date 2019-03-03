@@ -5,28 +5,22 @@ app.use(express.json({limit: '15mb'}))
 
 var getCam = false
 var getCamf = false
-var resp = undefined
+var resp = ""
 var thread = undefined
 
 app.get('/cam', function(req, res){
 	tgetCam = getCam
 	getCam = true
-	while(!resp){
-		console.log(on)
-	}
 	tresp = resp
-	resp = undefined
+	resp = ""
 	res.json({resp:tresp})
 })
 
 app.get('/camf', function(req, res){
 	tgetCam = getCamf
 	getCamf = true
-	while(!resp){
-		console.log(on)
-	}
 	tresp = resp
-	resp = undefined
+	resp = ""
 	res.json({resp:tresp})
 })
 
@@ -45,6 +39,12 @@ app.get('/camstatf', function(req, res){
 app.post('/resp', function(req, res){
 	resp = req.body.resp
 	res.json({resp:resp})
+})
+
+app.get('/resp', function(req, res){
+	tresp = resp
+	resp = ""
+	res.json({resp:tresp})
 })
 
 app.post('/thread', function(req, res){
