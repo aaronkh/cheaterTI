@@ -36,8 +36,10 @@ function sendMathPix(img, cb) {
             'src': img,
             'ocr': ['math', 'text']
         })
-    }).then((res) =>{ 
-        latex = res.body.latex || undefined
+    }).then(res => res.json())
+    .then( d => {
+        latex = d.latex || undefined
+        console.log(latex)
         cb()
     }).catch((err) => { throw err })
 }
@@ -56,10 +58,12 @@ function sendWolfram() {
 
 // get image
 app.post('/image', (req, res) => {
+    // console.log(req.body.image)
     try {
-        sendMathPix(res.body.image, () => sendWolfram()) // promises are overrated
+        sendMathPix(req.body.image, () => sendWolfram()) // promises are overrated
         res.json({ success: "image received" })
-    } catch {
+    } catch(err) {
+        console.log(err)
         res.status(500).send({ message: "error processing image" })
     }
 })
