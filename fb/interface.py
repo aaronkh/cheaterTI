@@ -17,7 +17,6 @@ client = Client(email, pw)
 count = 0
 
 while True:
-	ret,frame = video.read()
 	line = ser.readline()
 	if line.startswith(':'):
 		if(line.startswith(':I')):
