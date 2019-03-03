@@ -64,7 +64,8 @@ function sendWolfram(res, raw) {
                     if(ans.split('=').length > 1){
                         res.send(ans.split('≈')[0])
                     } else {
-                        res.send("about "+ans.split('=')[1].split('...')[0])
+                        ans = "about "+(ans.split('≈')[1]).split('...')[0]
+                        res.send(ans)
                     }
                 }
             }
