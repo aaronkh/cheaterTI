@@ -16,7 +16,7 @@
 const fetch = require('node-fetch')
 const express = require('express')
 const app = express()
-app.use(express.json())
+app.use(express.json({limit: '15mb'}))
 
 const MATHPIX_ID = process.env.MATHPIX_ID
 const MATHPIX_KEY = process.env.MATHPIX_KEY
