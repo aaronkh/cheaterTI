@@ -6,6 +6,8 @@ from secrets import *
 import serial
 import json
 import cv2
+import requests
+import base64
 
 ser = serial.Serial('/dev/cu.usbmodem141301', 9600, timeout=1)
 sleep(1)
@@ -20,10 +22,12 @@ while True:
 	ret,frame = video.read()
 	line = ser.readline()
 	if line.startswith(':'):
-		print "why"
 		if(line.startswith(':I')):
 			# take picture and get integral
-			cv2.imwrite('image.png', frame)		
+			cv2.imwrite('image.png', frame)
+			r = requests.post('https://math-alexa.appspot.com/image', json={ 'image': "data:image/jpg;base64," + base64.b64encode(open('image.png', "rb").read()).decode() })
+			ser.write(('Answer: ' + r.text + '\n').encode())
+			
 		elif(line.startswith(':C')):
 			# take picture and send to fb messenger
 			cv2.imwrite('image.png', frame)
