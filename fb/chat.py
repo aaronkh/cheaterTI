@@ -5,6 +5,7 @@ from secrets import *
 
 import os
 import json
+import emoji
 
 tID = None 
 tThread = None
@@ -17,11 +18,11 @@ class EchoBot(Client):
 
 		log.info("{} from {} in {}".format(message_object, thread_id, thread_type.name))
 		print message_object
-
 		d = {
-			"msg": message_object.text,
+			"msg": emoji.demojize(message_object.text),
 			"id": thread_id,
-			"type": thread_type.name
+			"type": thread_type.name,
+			"name": client.fetchUserInfo(author_id)[author_id].first_name
 		}
 
 		m = None

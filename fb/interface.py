@@ -5,17 +5,41 @@ from secrets import *
 
 import serial
 import json
+import cv2
 
 ser = serial.Serial('/dev/cu.usbmodem141301', 9600, timeout=1)
 sleep(1)
+
+video = cv2.VideoCapture(0)
 
 client = Client(email, pw)
 
 count = 0
 
 while True:
+	ret,frame = video.read()
 	line = ser.readline()
-	if line:
+	if line.startswith(':'):
+		print "why"
+		if(line.startswith(':I')):
+			# take picture and get integral
+			cv2.imwrite('image.png', frame)		
+		elif(line.startswith(':C')):
+			# take picture and send to fb messenger
+			cv2.imwrite('image.png', frame)
+			try:
+				m = None
+				with open("messages.json", 'r') as f:
+					m = json.loads(f.read())
+				m = m[len(m)-1]
+				client.sendLocalFiles('image.png', thread_id=int(m['id']), thread_type=ThreadType[m['type']])
+			except Exception as e:
+				pass
+			
+		elif(line.startswith(':W')):
+			pass
+			# send to wolframalpha
+	elif line:
 		message = Message(text=line)
 		try:
 			m = None
@@ -31,8 +55,11 @@ while True:
 			ms = json.loads(f.read())
 			for m in ms[count:]:
 				print m["msg"]
+				print m["name"]
 				print count
 				count+=1
-				ser.write((m["msg"]+"\n").encode())
+				ser.write((m["name"] + ": " + m["msg"]+"\n").encode())
 		except Exception as e:
 			print e
+
+video.release()
