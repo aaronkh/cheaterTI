@@ -51,12 +51,16 @@ function sendWolfram(res) {
     fetch(call).then(e=>
         e.json()
     ).then(d=>{
-        if (d.queryresult.success && d.queryresult.numpods > 0) 
-            for (let i = 0; i < d.queryresult.pods.length; i++) 
+        if (d.queryresult.success && d.queryresult.numpods > 0) {
+            console.log("query ok "+JSON.stringify(d.queryresult))
+            for (let i = 0; i < d.queryresult.pods.length; i++) {
                 if (d.queryresult.pods[i].title ==  "Result"){
                     console.log(d.queryresult.pods[i].subpods[0].plaintext)
                     res.send(d.queryresult.pods[i].subpods[0].plaintext)
                 }
+            }
+        }
+        console.log("empty string")
         res.send("")
     }).catch (e=>{
         console.log(e)
