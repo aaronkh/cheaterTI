@@ -14,11 +14,18 @@ const LaunchRequestHandler = {
 
 const MathIntentHandler = {
     canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'MathIntent';
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'IntentRequest'
+            && request.intent.name === 'MathIntent';
     },
     handle(handlerInput) {
-        const speechText = 'Math request sent';
+        var req = handlerInput.requestEnvelope.request;
+        console.log(req);
+        var lower = req.intent.slots.lowerbound.value;
+        var upper = req.intent.slots.upperbound.value;
+        console.log(lower);
+        console.log(upper);
+        const speechText = '\\int_' + lower + '^' + upper;
         return handlerInput.responseBuilder
             .speak(speechText)
             .getResponse();

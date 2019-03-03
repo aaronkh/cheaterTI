@@ -8,8 +8,9 @@ CheaterTI uses advanced programming techniques to make possible.
 
 # sfhacks2019
 
-- integrals through alexa and camera
-- call lyft?
-- messenger (python relay)
-- sending pictures
-- tts robo twilio call
+- [ ] integrals through alexa 
+- [x] integrals through camera
+- [ ] call lyft?
+- [x] messenger (python relay)
+- [ ] sending pictures
+- [ ] tts robo twilio call
