@@ -53,8 +53,10 @@ function sendWolfram(res) {
     ).then(d=>{
         if (d.queryresult.success && d.queryresult.numpods > 0) 
             for (let i = 0; i < d.queryresult.pods.length; i++) 
-                if (d.queryresult.pods[i].title ==  "Result")
+                if (d.queryresult.pods[i].title ==  "Result"){
+                    console.log(d.queryresult.pods[i].subpods[0].plaintext)
                     res.send(d.queryresult.pods[i].subpods[0].plaintext)
+                }
         res.send("")
     }).catch (e=>{
         console.log(e)
@@ -85,6 +87,7 @@ app.get('/latex', (req, res) => {
 })
 app.post('/latex', (req, res) => {
     latex = req.body.latex
+    console.log(req.body.latex)
     sendWolfram(res)
 })
 
