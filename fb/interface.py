@@ -71,7 +71,7 @@ while True:
 				# get google map search
 				place = requests.get("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?", params={
 					"key": lyft_secrets.google_key,
-					"input": params,
+					"input": line_lower,
 					"inputtype": "textquery",
 					"fields": "geometry"
 				})
