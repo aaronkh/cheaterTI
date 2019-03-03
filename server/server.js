@@ -44,9 +44,10 @@ function sendMathPix(img, cb) {
     }).catch((err) => { throw err })
 }
 
-function sendWolfram(res) {
+function sendWolfram(res, raw) {
     // // parse wolfram results
-    let encoded_latex = encodeURIComponent(latex.split(' ').join('')) // strips whitespace from latex
+    latex = raw ? latex : latex.split(' ').join('')
+    let encoded_latex = encodeURIComponent(latex) // strips whitespace from latex
     let call = `https://api.wolframalpha.com/v2/query?input=${encoded_latex}&format=plaintext&output=JSON&appid=${WOLFRAM_ID}`
     fetch(call).then(e=>
         e.json()
@@ -75,7 +76,7 @@ app.get('/test', (req, res) => {
 app.post('/image', (req, res) => {
     // console.log(req.body.image)
     try {
-        sendMathPix(req.body.image, () => sendWolfram(res)) // promises are overrated
+        sendMathPix(req.body.image, () => sendWolfram(res, false)) // promises are overrated
     } catch(err) {
         console.log(err)
         res.status(500).send({ message: "error processing image" })
@@ -92,7 +93,7 @@ app.get('/latex', (req, res) => {
 app.post('/latex', (req, res) => {
     latex = req.body.latex
     console.log(req.body.latex)
-    sendWolfram(res)
+    sendWolfram(res, true)
 })
 
 // get wolfram results
