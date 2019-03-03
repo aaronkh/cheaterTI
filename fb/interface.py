@@ -9,10 +9,8 @@ import cv2
 import requests
 import base64
 
-ser = serial.Serial('/dev/cu.usbmodem141301', 9600, timeout=1)
+ser = serial.Serial('/dev/tty96B0', 9600, timeout=1)
 sleep(1)
-
-video = cv2.VideoCapture(0)
 
 client = Client(email, pw)
 
@@ -23,22 +21,13 @@ while True:
 	line = ser.readline()
 	if line.startswith(':'):
 		if(line.startswith(':I')):
-			# take picture and get integral
-			cv2.imwrite('image.png', frame)
-			r = requests.post('https://math-alexa.appspot.com/image', json={ 'image': "data:image/jpg;base64," + base64.b64encode(open('image.png', "rb").read()).decode() })
+			r = requests.get('http://192.168.137.229:3000/cam')
 			ser.write(('Answer: ' + r.text + '\n').encode())
 			
 		elif(line.startswith(':C')):
 			# take picture and send to fb messenger
-			cv2.imwrite('image.png', frame)
-			try:
-				m = None
-				with open("messages.json", 'r') as f:
-					m = json.loads(f.read())
-				m = m[len(m)-1]
-				client.sendLocalFiles('image.png', thread_id=int(m['id']), thread_type=ThreadType[m['type']])
-			except Exception as e:
-				pass
+			r = requests.get('http://192.168.137.229:3000/camf')
+			ser.write(('Image sent').encode())
 			
 		elif(line.startswith(':W')):
 			pass
