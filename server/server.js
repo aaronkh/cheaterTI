@@ -62,10 +62,10 @@ function sendWolfram(res, raw) {
                     console.log(d.queryresult.pods[i].subpods[0].plaintext)
                     let ans = d.queryresult.pods[i].subpods[0].plaintext
                     ans = ans.split('...')[0]
-                    if(string.includes('=')){
+                    if(ans.includes('=')){
                         ans = ans.split('≈')[0]
                         ans = ans.split('=')[1]
-                    } else if (string.includes('≈')) {
+                    } else if (ans.includes('≈')) {
                         ans = ans.split('≈')[1]
                     }
                     res.send(ans)
