@@ -10,8 +10,9 @@ import cv2
 import requests
 import base64
 import urllib
+import cv2
 
-ser = serial.Serial('/dev/tty96B0', 9600, timeout=1)
+ser = serial.Serial('/dev/cu.usbmodem142401', 9600, timeout=1)
 sleep(1)
 
 # lyft api stuff
@@ -42,64 +43,67 @@ client = Client(email, pw)
 
 count = 0
 
+video = cv2.VideoCapture(0)
+
 while True:
+	ret,frame = video.read()
 	line = ser.readline()
 	if line.startswith(':'):
 		if(line.startswith(':I')):
-			r = requests.get(url+':3000/cam')
-			ans = None
-			while True:
-				f = requests.get(url+':3000/resp')
-				res = f.json()
-				if(len(res['resp'])): 
-					ans = res['resp']
-					break
-
-			ser.write(('Answer: ' + ans + '\n').encode())
+			# take picture and get integral
+			cv2.imwrite('image.png', frame)
+			r = requests.post('https://math-alexa.appspot.com/image', json={ 'image': "data:image/jpg;base64," + base64.b64encode(open('image.png', "rb").read()).decode() })
+			ser.write(('Answer: ' + r.text + '\n').encode())
 			
 		elif(line.startswith(':C')):
 			# take picture and send to fb messenger
-			r = requests.get(url+':3000/camf')
+			cv2.imwrite('image.png', frame)
+			try:
+				m = None
+				with open("messages.json", 'r') as f:
+					m = json.loads(f.read())
+				m = m[len(m)-1]
+				client.sendLocalFiles('image.png', thread_id=int(m['id']), thread_type=ThreadType[m['type']])
+			except Exception as e:
+				pass
+			
 			ser.write(('Image sent').encode())
-		elif line.startswith(':L '):
-			line_lower = line.lower()
-			line_lower = line_lower[3:]
-			# refresh token
-			new_access_token()
-			if lyft_status == 'ordered' and line_lower == 'cancel':
-				cancelLyft()
-				ser.write(('Cancelled Lyft #'+str(lyft_ride_id)).encode())
-			else:
-				# get google map search
-				place = requests.get("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?", params={
-					"key": lyft_secrets.google_key,
-					"input": line_lower,
-					"inputtype": "textquery",
-					"fields": "geometry"
-				})
-				loc = json.loads(place.text)['candidates'][0]['geometry']['location']
+		# elif line.startswith(':L '):
+		# 	line_lower = line.lower()
+		# 	line_lower = line_lower[3:]
+		# 	# refresh token
+		# 	new_access_token()
+		# 	if lyft_status == 'ordered' and line_lower == 'cancel':
+		# 		cancelLyft()
+		# 		ser.write(('Cancelled Lyft #'+str(lyft_ride_id)).encode())
+		# 	else:
+		# 		# get google map search
+		# 		place = requests.get("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?", params={
+		# 			"key": lyft_secrets.google_key,
+		# 			"input": line_lower,
+		# 			"inputtype": "textquery",
+		# 			"fields": "geometry"
+		# 		})
+		# 		loc = json.loads(place.text)['candidates'][0]['geometry']['location']
 
-				r = requests.post('https://api.lyft.com/v1/rides', 
-				headers = {
-					"Authorization" : "Bearer "+access_token
-				},
-				json={
-					"ride_type": "lyft",
-					"origin": current,
-					"destination": loc
-				}).text
+		# 		r = requests.post('https://api.lyft.com/v1/rides', 
+		# 		headers = {
+		# 			"Authorization" : "Bearer "+access_token
+		# 		},
+		# 		json={
+		# 			"ride_type": "lyft",
+		# 			"origin": current,
+		# 			"destination": loc
+		# 		}).text
 
-				# order lyft
-				lyft_status = 'ordered'
-				lyft_ride_id = json.loads(r)["ride_id"]
-				ser.write(('Please wait for Lyft to '+line_lower).encode())
+		# 		# order lyft
+		# 		lyft_status = 'ordered'
+		# 		lyft_ride_id = json.loads(r)["ride_id"]
+		# 		ser.write(('Please wait for Lyft to '+line_lower).encode())
 		elif line.startswith(':T '):
 			requests.post('https://math-alexa.appspot.com/twilio', json = {
 				"message": line.lower()[3:]
 			})
-		elif(line.startswith(':W')):
-			pass
-			# send to wolframalpha
 	elif line:
 		message = Message(text=line)
 		try:

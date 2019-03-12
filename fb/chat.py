@@ -11,8 +11,6 @@ import requests
 tID = None 
 tThread = None
 
-url = "http://192.168.137.109"
-
 # Subclass fbchat.Client and override required methods
 class EchoBot(Client):
 	def onMessage(self, author_id, message_object, thread_id, thread_type, **kwargs):
@@ -27,8 +25,6 @@ class EchoBot(Client):
 			"type": thread_type.name,
 			"name": client.fetchUserInfo(author_id)[author_id].first_name
 		}
-
-		requests.post(url+':3000/thread', json={ 'thread': thread_id })
 
 		m = None
 		if(os.stat("messages.json").st_size == 0): m = []

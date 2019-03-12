@@ -1,3 +1,5 @@
+[![Demo](image.jpg)](https://youtu.be/_ZXv59ZKQfw)
+
 # CheaterTI
 
 There is a major problem plaguing academic institutions nationwide: poor grades. This is especially the case for students in STEM. This will be a problem no more. Introducing: CheaterTI; the solution to all things regarding academic dishonesty.
